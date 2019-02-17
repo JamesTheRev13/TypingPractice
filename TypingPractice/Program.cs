@@ -22,6 +22,7 @@ namespace TypingPractice
         // Keeps track of words array
         public static int numWords = 88;
         public static int correctWords = 0;
+        public static int incorrectWords = 0;
         // Initialize our random number generator
         public static Random rand = new Random();
         // Handles user input
@@ -39,7 +40,6 @@ namespace TypingPractice
         public static int EASY = 30;
         public static int selectedDifficulty;
 
-
         // Entry Point
         static void Main(string[] args)
         {
@@ -50,7 +50,6 @@ namespace TypingPractice
         // Handles gameplay
         static void Play()
         {
-            
             if ( timeLeft <= 0 )
             {
                 outOfTime();
@@ -71,6 +70,7 @@ namespace TypingPractice
             Console.WriteLine("************************");
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Score: " + correctWords + " words!");
+            Console.WriteLine("Incorrect Answers: " + incorrectWords + " words!");
             Console.ResetColor();
             Console.WriteLine();
             Console.WriteLine();
@@ -82,14 +82,12 @@ namespace TypingPractice
             Console.WriteLine(currentWord);
             Console.ResetColor();
             Console.WriteLine("********");
-          
 
             while (timeLeft != 0)
             {
                 // While the answser is incorrect/empty
                 while (!userInput.Equals("exit"))
                 {
-
                     // Reads user input
                     userInput = Console.ReadLine();
                     if (userInput.Equals(""))
@@ -103,9 +101,11 @@ namespace TypingPractice
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Incorrect!!!");
                         Console.WriteLine("Lives: " + numLives);
+                        incorrectWords++;
                         numLives--; // Take a life away
                         Console.ResetColor();
-
+                        if ( numLives > 0 ) 
+                        Play();
                     }
 
                     if (numLives == -1)
@@ -113,13 +113,11 @@ namespace TypingPractice
                         outOfLives();
                     }
 
-
                     if (userInput.Equals(currentWord))
                     {
                         correctWords++;
                         Play();
                     }
-
                 }
                 if (userInput.Equals("exit"))
                 {
@@ -228,7 +226,7 @@ namespace TypingPractice
             Console.ResetColor();
 
             var difficultyKey = Console.ReadKey();
-
+            // HANDLES DIFFICULTY SELECTION
             switch (difficultyKey.Key)
             {
                 case ConsoleKey.D1:
@@ -266,40 +264,13 @@ namespace TypingPractice
                     StartMessage();
                     break;
             }
-           
-            //string difficultyChoice = Console.ReadLine();
-            //switch (difficultyChoice)
-            //{
-            //    case "1":
-            //        numLives = 1;
-            //        Console.WriteLine("You have 2 lives! Good luck!");
-            //        selectedDifficulty = HARD;
-            //        break;
-            //    case "2":
-            //        numLives = 3;
-            //        Console.WriteLine("You have 4 lives! Good luck!");
-            //        selectedDifficulty = MEDIUM;
-            //        break;
-            //    case "3":
-            //        numLives = 5;
-            //        Console.WriteLine("You have 6 lives! Good luck!");
-            //        selectedDifficulty = EASY;
-            //        break;
-
-            //    default:
-            //        numLives = 0;
-            //        Console.ForegroundColor = ConsoleColor.DarkRed;
-            //        Console.WriteLine("Miss one and you're done!!!!!");
-            //        Console.ResetColor();
-            //        selectedDifficulty = 3;
-            //        break;
-            //}
         }
         public static void restartGame()
         {
             Console.Clear();
             //numLives = 5;
             numWords = words.Length;
+            incorrectWords = 0;
             correctWords = 0;
             Start();
         }
@@ -336,7 +307,6 @@ namespace TypingPractice
             {
                 Environment.Exit(0);
             }
-
         }
     }
 }
